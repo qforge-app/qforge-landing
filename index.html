@@ -381,7 +381,14 @@ async function joinWaitlist() {
     el.innerHTML = `<strong>🎉 You're #${d.position}!</strong><br>
       Discount code: <code style="background:#0d1117;padding:2px 6px;border-radius:4px;font-size:14px">${d.discount_code}</code> (${d.discount_pct}% off)<br>
       <span style="font-size:13px;margin-top:8px;display:block">Share your link and move up: <a href="${d.referral_link}" style="color:#6366f1">${d.referral_link}</a></span>`;
-  } catch(e) { alert('Something went wrong. Try again.'); }
+  } catch(e) {
+    const el = document.getElementById('waitlistSuccess');
+    el.style.display = 'block';
+    el.style.background = 'rgba(248,81,73,.1)';
+    el.style.borderColor = 'rgba(248,81,73,.4)';
+    el.style.color = '#f85149';
+    el.innerHTML = 'Something went wrong. Please try again in a moment.';
+  }
 }
 
 loadStats(); loadChallenge(); loadWaitlistCount();
