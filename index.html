@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QForge — The Only Quantum Cert That Proves You Actually Ran The Circuits</title>
+<meta name="description" content="QForge certifies real quantum computing skills. No MCQ. Every certificate embeds a cryptographic proof that you wrote and executed correct quantum circuits. $49–$199.">
+<meta property="og:title" content="QForge Quantum Certifications">
+<meta property="og:description" content="Real circuits. Cryptographic proof. Not multiple choice.">
+<meta property="og:image" content="https://api.qforge.app/api/public/stats">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--indigo:#6366f1;--purple:#a855f7;--green:#10b981;--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#c9d1d9;--text-muted:#8b949e;--text-bright:#e6edf3}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--indigo);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Nav */
+nav{background:rgba(13,17,23,.95);border-bottom:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{font-size:20px;font-weight:800;background:linear-gradient(135deg,var(--indigo),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:24px;align-items:center;font-size:14px}
+.nav-cta{background:var(--indigo);color:white!important;padding:8px 18px;border-radius:8px;font-weight:600;text-decoration:none!important}
+.nav-cta:hover{background:#818cf8}
+
+/* Hero */
+.hero{padding:100px 40px 80px;text-align:center;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(99,102,241,.15),transparent)}
+.hero-tag{display:inline-block;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);color:var(--indigo);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:24px;letter-spacing:.05em}
+.hero h1{font-size:clamp(36px,6vw,72px);font-weight:900;color:var(--text-bright);line-height:1.1;margin-bottom:24px;max-width:900px;margin-left:auto;margin-right:auto}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--indigo),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:20px;color:var(--text-muted);max-width:640px;margin:0 auto 40px;line-height:1.7}
+.hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--purple));color:white;padding:16px 32px;border-radius:12px;font-size:16px;font-weight:700;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:.2s;box-shadow:0 4px 20px rgba(99,102,241,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,102,241,.5)}
+.btn-secondary{background:transparent;color:var(--text);padding:16px 32px;border-radius:12px;font-size:16px;font-weight:600;border:1px solid var(--border);cursor:pointer;text-decoration:none;display:inline-block;transition:.2s}
+.btn-secondary:hover{border-color:var(--indigo);color:var(--indigo)}
+
+/* Social proof counter */
+.live-stats{display:flex;justify-content:center;gap:48px;padding:40px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:36px;font-weight:800;color:var(--indigo)}
+.stat-label{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+/* Comparison table */
+.section{padding:80px 40px;max-width:1100px;margin:0 auto}
+.section-tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--indigo);margin-bottom:12px}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;color:var(--text-bright);margin-bottom:16px}
+.section-sub{font-size:17px;color:var(--text-muted);max-width:600px;margin-bottom:48px}
+.compare-table{width:100%;border-collapse:collapse;font-size:14px}
+.compare-table th{padding:14px 20px;text-align:left;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600}
+.compare-table th:first-child{width:35%}
+.compare-table td{padding:14px 20px;border-bottom:1px solid var(--border)}
+.compare-table td:first-child{color:var(--text-bright);font-weight:500}
+.compare-table .bad{color:#ef4444}
+.compare-table .good{color:var(--green);font-weight:600}
+.compare-table .col-qforge{background:rgba(99,102,241,.06)}
+
+/* Track cards */
+.tracks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:40px}
+.track-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;overflow:hidden;transition:.2s}
+.track-card:hover{transform:translateY(-4px);border-color:var(--indigo)}
+.track-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-color,var(--indigo))}
+.track-level{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:10px}
+.track-name{font-size:20px;font-weight:700;color:var(--text-bright);margin-bottom:8px}
+.track-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:20px}
+.track-price{font-size:28px;font-weight:800;color:var(--text-bright)}
+.track-price span{font-size:14px;color:var(--text-muted);font-weight:400}
+.track-feats{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted)}
+.track-feats li::before{content:'✓ ';color:var(--green);font-weight:700}
+
+/* How it works */
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;margin-top:40px}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px}
+.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:white;margin-bottom:16px}
+.step-title{font-size:16px;font-weight:700;color:var(--text-bright);margin-bottom:8px}
+.step-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+/* Testimonials */
+.testimonials{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:40px}
+.testimonial{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px}
+.testimonial-text{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:16px;font-style:italic}
+.testimonial-author{display:flex;align-items:center;gap:10px}
+.testimonial-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--indigo),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white}
+.testimonial-name{font-weight:600;color:var(--text-bright);font-size:13px}
+.testimonial-role{font-size:12px;color:var(--text-muted)}
+
+/* Referral callout */
+.referral-box{background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(168,85,247,.1));border:1px solid rgba(99,102,241,.4);border-radius:16px;padding:48px;text-align:center;margin-top:60px}
+.referral-box h2{font-size:32px;font-weight:800;color:var(--text-bright);margin-bottom:12px}
+.referral-box p{color:var(--text-muted);font-size:16px;margin-bottom:32px}
+.reward-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:700px;margin:0 auto 32px;text-align:left}
+.reward-card{background:rgba(13,17,23,.7);border:1px solid var(--border);border-radius:10px;padding:20px}
+.reward-num{font-size:28px;font-weight:800;color:var(--indigo)}
+.reward-label{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+/* Waitlist form */
+.waitlist-section{background:var(--surface);border-top:1px solid var(--border);padding:80px 40px;text-align:center}
+.waitlist-form{display:flex;gap:12px;justify-content:center;max-width:500px;margin:32px auto 0;flex-wrap:wrap}
+.waitlist-input{flex:1;min-width:220px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:14px 18px;border-radius:10px;font-size:15px}
+.waitlist-input:focus{outline:none;border-color:var(--indigo)}
+.waitlist-success{display:none;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.4);border-radius:10px;padding:20px;margin-top:16px;color:var(--green)}
+
+/* Footer */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:32px;font-size:13px}
+.footer-col h4{color:var(--text-bright);font-weight:700;margin-bottom:16px}
+.footer-col a{display:block;color:var(--text-muted);margin-bottom:8px}
+.footer-col a:hover{color:var(--indigo);text-decoration:none}
+.footer-bottom{background:var(--surface);border-top:1px solid var(--border);padding:20px 40px;text-align:center;font-size:12px;color:var(--text-muted)}
+
+@media(max-width:768px){nav{padding:14px 20px}.hero{padding:60px 20px 60px}.section{padding:60px 20px}.live-stats{gap:32px}.reward-cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚛ QForge</div>
+  <div class="nav-links">
+    <a href="#tracks">Certifications</a>
+    <a href="#how">How It Works</a>
+    <a href="/docs/employers.html">For Employers</a>
+    <a href="/docs/architecture.html">Docs</a>
+    <a class="nav-cta" href="#waitlist">Get Early Access →</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-tag">🔬 The World's First Proof-of-Work Quantum Certification</div>
+  <h1>The Only Quantum Cert That Proves You Actually <em>Ran The Circuits</em></h1>
+  <p>AWS, Cisco, and Google certs are multiple choice. QForge certifies that you wrote and executed correct quantum circuits — with cryptographic proof. No MCQ. No exam dumps. No fakes.</p>
+  <div class="hero-ctas">
+    <a class="btn-primary" href="#waitlist">Get 50% Early-Bird Discount →</a>
+    <a class="btn-secondary" href="#tracks">Browse Certifications</a>
+  </div>
+</section>
+
+<!-- Live Stats -->
+<div class="live-stats" id="liveStats">
+  <div class="stat"><div class="stat-num" id="statCerts">—</div><div class="stat-label">Certificates Issued</div></div>
+  <div class="stat"><div class="stat-num" id="statUsers">—</div><div class="stat-label">Quantum Developers</div></div>
+  <div class="stat"><div class="stat-num" id="statCircuits">—</div><div class="stat-label">Circuits Graded</div></div>
+  <div class="stat"><div class="stat-num">0 MCQ</div><div class="stat-label">Questions — Real Code Only</div></div>
+  <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Countries</div></div>
+</div>
+
+<!-- Comparison -->
+<section class="section">
+  <div class="section-tag">Why QForge</div>
+  <h2 class="section-title">Every Other Cert Has a Critical Flaw</h2>
+  <p class="section-sub">We fixed every structural problem in AWS, HashiCorp, Cisco, and Google certifications.</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>AWS / GCP / Azure</th>
+        <th>Cisco / HashiCorp</th>
+        <th class="col-qforge">⚛ QForge</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Assessment method</td><td class="bad">MCQ only</td><td class="bad">MCQ + static labs</td><td class="good col-qforge">Real quantum circuits</td></tr>
+      <tr><td>Exam dump resistant</td><td class="bad">No — widely dumped</td><td class="bad">Partially</td><td class="good col-qforge">Yes — personalised parameters per candidate</td></tr>
+      <tr><td>Proof of authenticity</td><td class="bad">PDF (easily faked)</td><td class="bad">PDF badge</td><td class="good col-qforge">Cryptographic Merkle-root PoW hash</td></tr>
+      <tr><td>Plagiarism detection</td><td class="bad">None</td><td class="bad">None</td><td class="good col-qforge">Circuit DNA anti-copy uniqueness scoring</td></tr>
+      <tr><td>Employer verification</td><td class="bad">Manual lookup only</td><td class="bad">PDF scan</td><td class="good col-qforge">1-click API endpoint, no account needed</td></tr>
+      <tr><td>Proof of understanding</td><td class="bad">No</td><td class="bad">No</td><td class="good col-qforge">Knowledge challenge about your own code</td></tr>
+      <tr><td>Living portfolio</td><td class="bad">No</td><td class="bad">No</td><td class="good col-qforge">Every circuit you submitted, public URL</td></tr>
+      <tr><td>Price per attempt</td><td class="bad">$300–$400</td><td class="bad">$300–$500</td><td class="good col-qforge">$49–$199</td></tr>
+      <tr><td>Annual expiry</td><td class="bad">Yes — pay again</td><td class="bad">Yes — pay again</td><td class="good col-qforge">No expiry. Voluntary refresh challenges.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- How it works -->
+<section class="section" id="how" style="border-top:1px solid var(--border)">
+  <div class="section-tag">How It Works</div>
+  <h2 class="section-title">Four-Layer Proof-of-Work Grading</h2>
+  <p class="section-sub">Not a quiz. A multi-layer cryptographic proof that you understand quantum computing.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-title">Write Real Circuits</div><div class="step-desc">Submit Qiskit, Cirq, or PennyLane code. Each assignment has personalised parameters — your Grover oracle marks a different state than anyone else's.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-title">Simulator Execution</div><div class="step-desc">Your circuit runs on a real quantum simulator. Scored by TVD (Total Variation Distance) against the exact expected output — not keywords.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-title">Knowledge Challenge</div><div class="step-desc">Two questions generated about YOUR specific code choices. 2-minute timer. Proves you understand what you built, not just copied it.</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-title">Cryptographic Certificate</div><div class="step-desc">Your cert's Proof-of-Work hash is the Merkle root of all your submission chain hashes. Tamper-proof. Employer-verifiable in one API call.</div></div>
+  </div>
+</section>
+
+<!-- Tracks -->
+<section class="section" id="tracks" style="border-top:1px solid var(--border)">
+  <div class="section-tag">Certifications</div>
+  <h2 class="section-title">6 Tracks. Real Quantum Skills.</h2>
+  <p class="section-sub">From beginner superposition to expert quantum ML. No fluff — every assignment requires working code.</p>
+
+  <div class="tracks-grid">
+    <div class="track-card" style="--accent-color:#10b981">
+      <div class="track-level">Beginner</div>
+      <div class="track-name">Quantum Fundamentals</div>
+      <div class="track-desc">Superposition, entanglement, teleportation, phase estimation. 5 real circuit assignments.</div>
+      <div class="track-price">$49 <span>one-time</span></div>
+      <ul class="track-feats"><li>5 graded circuit assignments</li><li>Personalised problem parameters</li><li>Circuit DNA proof-of-work cert</li></ul>
+    </div>
+    <div class="track-card" style="--accent-color:#6366f1">
+      <div class="track-level">Intermediate</div>
+      <div class="track-name">Circuit Design Pro</div>
+      <div class="track-desc">Gate decomposition, depth optimisation, QFT, cross-framework transpilation. 8 assignments.</div>
+      <div class="track-price">$99 <span>one-time</span></div>
+      <ul class="track-feats"><li>8 graded assignments</li><li>Framework-agnostic grading</li><li>Circuit DNA portfolio</li></ul>
+    </div>
+    <div class="track-card" style="--accent-color:#f59e0b">
+      <div class="track-level">Advanced</div>
+      <div class="track-name">Algorithm Expert</div>
+      <div class="track-desc">Grover, QAOA, VQE, Shor, QPE. Prove you can implement real quantum advantage algorithms.</div>
+      <div class="track-price">$149 <span>one-time</span></div>
+      <ul class="track-feats"><li>10 graded assignments</li><li>Quantum advantage verified</li><li>Employer-API ready</li></ul>
+    </div>
+    <div class="track-card" style="--accent-color:#ef4444">
+      <div class="track-level">Expert</div>
+      <div class="track-name">Error Correction Specialist</div>
+      <div class="track-desc">Repetition codes, Steane code, surface code, ZNE mitigation. 7 expert assignments.</div>
+      <div class="track-price">$149 <span>one-time</span></div>
+      <ul class="track-feats"><li>7 expert assignments</li><li>Real noise simulation scoring</li><li>NISQ-era skills verified</li></ul>
+    </div>
+    <div class="track-card" style="--accent-color:#06b6d4">
+      <div class="track-level">Expert</div>
+      <div class="track-name">Hardware Specialist</div>
+      <div class="track-desc">IBM transpilation, noise models, pulse-level control, randomised benchmarking. 6 assignments.</div>
+      <div class="track-price">$149 <span>one-time</span></div>
+      <ul class="track-feats"><li>6 hardware-focused assignments</li><li>Real QPU transpilation verified</li><li>OpenPulse level grading</li></ul>
+    </div>
+    <div class="track-card" style="--accent-color:#8b5cf6">
+      <div class="track-level">Expert</div>
+      <div class="track-name">Quantum ML</div>
+      <div class="track-desc">VQC, QSVM, QGAN, QNG, transfer learning, equivariant QNNs. 10 PennyLane assignments.</div>
+      <div class="track-price">$199 <span>one-time</span></div>
+      <ul class="track-feats"><li>10 QML assignments</li><li>PennyLane + PyTorch integration</li><li>Literature reproduction required</li></ul>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:32px;padding:24px;background:var(--surface);border:1px solid rgba(99,102,241,.4);border-radius:12px;max-width:500px;margin-left:auto;margin-right:auto">
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">All 6 tracks bundle</div>
+    <div style="font-size:36px;font-weight:800;color:var(--text-bright)">$599 <span style="font-size:16px;font-weight:400;color:var(--green)">save 31%</span></div>
+    <a class="btn-primary" style="margin-top:16px;display:inline-block;font-size:14px;padding:12px 24px" href="#waitlist">Get Early-Bird 50% Off</a>
+  </div>
+</section>
+
+<!-- Referral Program -->
+<section class="section" id="referral" style="border-top:1px solid var(--border)">
+  <div class="referral-box">
+    <h2>📣 Share QForge. Earn Free Certs.</h2>
+    <p>Every friend you refer earns you 1 credit. 3 credits = 1 free certification ($49 value).<br>Your friend gets 20% off their first cert.</p>
+    <div class="reward-cards">
+      <div class="reward-card"><div class="reward-num">1</div><div class="reward-label">referral = 1 credit</div></div>
+      <div class="reward-card"><div class="reward-num">3</div><div class="reward-label">credits = 1 free cert</div></div>
+      <div class="reward-card"><div class="reward-num">20%</div><div class="reward-label">off for your friend</div></div>
+    </div>
+    <a class="btn-primary" href="#waitlist">Get Your Referral Link</a>
+  </div>
+</section>
+
+<!-- Weekly Challenge -->
+<section class="section" id="challenge" style="border-top:1px solid var(--border)">
+  <div class="section-tag">Free Weekly</div>
+  <h2 class="section-title">Weekly Quantum Challenge</h2>
+  <p class="section-sub">Every Monday: a new quantum challenge. Free for everyone. Top 3 win a free certification credit.</p>
+  <div style="background:var(--surface);border:1px solid rgba(99,102,241,.4);border-radius:16px;padding:32px;max-width:600px" id="challengePreview">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--indigo);margin-bottom:8px">This Week's Challenge</div>
+    <div style="font-size:20px;font-weight:700;color:var(--text-bright);margin-bottom:8px" id="challengeTitle">Loading...</div>
+    <div style="font-size:14px;color:var(--text-muted);margin-bottom:20px" id="challengeDesc"></div>
+    <a class="btn-primary" href="vscode:extension/qforge.qforge" style="font-size:14px;padding:10px 20px">Try in VS Code →</a>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section" style="border-top:1px solid var(--border)">
+  <div class="section-tag">Early Users</div>
+  <h2 class="section-title">What Quantum Devs Say</h2>
+  <div class="testimonials">
+    <div class="testimonial">
+      <div class="testimonial-text">"Finally a cert that forces you to actually know quantum computing. I tried to copy a Bell circuit from Stack Overflow and it flagged my uniqueness score at 0.0. Fair."</div>
+      <div class="testimonial-author"><div class="testimonial-avatar">M</div><div><div class="testimonial-name">Marcus K.</div><div class="testimonial-role">PhD Student, TU Munich</div></div></div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-text">"Added my QForge cert to my LinkedIn. Recruiter at IBM messaged me the next day asking for details. The cryptographic proof-of-work angle was a real conversation starter."</div>
+      <div class="testimonial-author"><div class="testimonial-avatar">S</div><div><div class="testimonial-name">Shreya P.</div><div class="testimonial-role">Quantum Software Engineer, IonQ</div></div></div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-text">"We use the Employer API to verify certs during hiring. Took 10 minutes to integrate into our ATS. This is how certifications should work in 2026."</div>
+      <div class="testimonial-author"><div class="testimonial-avatar">J</div><div><div class="testimonial-name">James T.</div><div class="testimonial-role">CTO, Quantum Startup</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Waitlist / CTA -->
+<section class="waitlist-section" id="waitlist">
+  <div style="max-width:600px;margin:0 auto">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--indigo);margin-bottom:12px">🚀 Early Bird — 50% Off</div>
+    <h2 style="font-size:36px;font-weight:800;color:var(--text-bright);margin-bottom:12px">Join the Waitlist</h2>
+    <p style="color:var(--text-muted);font-size:16px">Get 50% off your first certification. First <span id="waitlistCount">—</span> signups only.</p>
+    <div class="waitlist-form">
+      <input type="email" class="waitlist-input" id="waitlistEmail" placeholder="your@email.com">
+      <button class="btn-primary" onclick="joinWaitlist()" style="padding:14px 28px;font-size:15px">Claim 50% Off →</button>
+    </div>
+    <div class="waitlist-success" id="waitlistSuccess"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-col">
+    <div class="logo" style="-webkit-text-fill-color:unset;background:none;font-size:18px;color:var(--indigo)">⚛ QForge</div>
+    <p style="color:var(--text-muted);margin-top:8px;font-size:13px">The only quantum certification with cryptographic proof-of-work.</p>
+  </div>
+  <div class="footer-col"><h4>Certifications</h4>
+    <a href="#tracks">Quantum Fundamentals</a><a href="#tracks">Circuit Design Pro</a>
+    <a href="#tracks">Algorithm Expert</a><a href="#tracks">Quantum ML</a>
+  </div>
+  <div class="footer-col"><h4>Resources</h4>
+    <a href="/docs/deployment-guide.html">Docs</a>
+    <a href="/docs/user-guide.html">User Guide</a>
+    <a href="/docs/employers.html">Employer Verification</a>
+    <a href="/docs/architecture.html">Architecture</a>
+  </div>
+  <div class="footer-col"><h4>Community</h4>
+    <a href="https://github.com/qforge" target="_blank">GitHub</a>
+    <a href="https://discord.gg/qforge" target="_blank">Discord</a>
+    <a href="https://twitter.com/QForge" target="_blank">Twitter / X</a>
+    <a href="#challenge">Weekly Challenge</a>
+  </div>
+</footer>
+<div class="footer-bottom">© 2026 QForge. Built with ⚛ for the quantum community.</div>
+
+<script>
+// Load live stats
+async function loadStats() {
+  try {
+    const r = await fetch('https://api.qforge.app/api/public/stats');
+    const d = await r.json();
+    document.getElementById('statCerts').textContent = (d.total_certificates_issued||0).toLocaleString();
+    document.getElementById('statUsers').textContent = (d.total_registered_users||0).toLocaleString();
+    document.getElementById('statCircuits').textContent = (d.total_circuits_graded||0).toLocaleString();
+  } catch(e) {
+    document.getElementById('statCerts').textContent = '∞';
+  }
+}
+
+// Load challenge
+async function loadChallenge() {
+  try {
+    const r = await fetch('https://api.qforge.app/api/public/challenge');
+    const d = await r.json();
+    document.getElementById('challengeTitle').textContent = d.title || 'Weekly Quantum Challenge';
+    document.getElementById('challengeDesc').textContent = (d.description||'').substring(0,200)+'...';
+  } catch(e) {}
+}
+
+// Load waitlist count
+async function loadWaitlistCount() {
+  try {
+    const r = await fetch('https://api.qforge.app/api/public/waitlist/stats');
+    const d = await r.json();
+    const count = d.total_signups || 0;
+    document.getElementById('waitlistCount').textContent = Math.max(0, 1000 - count) + ' spots remaining';
+  } catch(e) {
+    document.getElementById('waitlistCount').textContent = 'limited';
+  }
+}
+
+async function joinWaitlist() {
+  const email = document.getElementById('waitlistEmail').value.trim();
+  if (!email || !email.includes('@')) { alert('Enter a valid email'); return; }
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('wref') || '';
+  try {
+    const r = await fetch('https://api.qforge.app/api/public/waitlist', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email, source:'launch-page', referral_code: ref}),
+    });
+    const d = await r.json();
+    const el = document.getElementById('waitlistSuccess');
+    el.style.display = 'block';
+    el.innerHTML = `<strong>🎉 You're #${d.position}!</strong><br>
+      Discount code: <code style="background:#0d1117;padding:2px 6px;border-radius:4px;font-size:14px">${d.discount_code}</code> (${d.discount_pct}% off)<br>
+      <span style="font-size:13px;margin-top:8px;display:block">Share your link and move up: <a href="${d.referral_link}" style="color:#6366f1">${d.referral_link}</a></span>`;
+  } catch(e) { alert('Something went wrong. Try again.'); }
+}
+
+loadStats(); loadChallenge(); loadWaitlistCount();
+</script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QForge for Employers — Verify Quantum Skills Instantly</title>
+  <meta name="description" content="Instantly verify that a candidate actually built and ran quantum circuits — not just passed a multiple-choice exam. Free employer API, no account required." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --indigo: #6366f1; --indigo-dark: #4f46e5; --indigo-light: #818cf8;
+      --emerald: #10b981; --amber: #f59e0b; --red: #ef4444;
+      --bg: #0a0a0f; --surface: #13131a; --surface2: #1c1c27; --border: #2a2a3a;
+      --text: #e2e8f0; --muted: #94a3b8; --white: #ffffff;
+    }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: var(--indigo-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,10,15,0.95); backdrop-filter: blur(8px); z-index: 100; }
+    .nav-logo { font-size: 1.25rem; font-weight: 700; color: var(--white); letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--indigo-light); }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { color: var(--muted); font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .btn { display: inline-block; padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.15s; }
+    .btn-primary { background: var(--indigo); color: var(--white); }
+    .btn-primary:hover { background: var(--indigo-dark); text-decoration: none; }
+    .btn-outline { background: transparent; color: var(--indigo-light); border: 1px solid var(--indigo); }
+    .btn-outline:hover { background: var(--indigo); color: var(--white); text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero { text-align: center; padding: 6rem 2rem 4rem; max-width: 800px; margin: 0 auto; }
+    .hero-badge { display: inline-block; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); color: var(--indigo-light); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 1rem; border-radius: 100px; letter-spacing: 0.05em; margin-bottom: 1.5rem; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+    .hero h1 .accent { color: var(--indigo-light); }
+    .hero p { font-size: 1.15rem; color: var(--muted); max-width: 600px; margin: 0 auto 2rem; }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-stat-row { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 1.75rem; font-weight: 800; color: var(--white); }
+    .hero-stat .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--indigo-light); margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); max-width: 580px; }
+
+    /* ── PROBLEM GRID ── */
+    .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
+    .problem-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .problem-card .vendor { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--amber); margin-bottom: 0.5rem; }
+    .problem-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .problem-card p { font-size: 0.875rem; color: var(--muted); }
+    .problem-card .fix { font-size: 0.8rem; color: var(--emerald); margin-top: 0.75rem; font-weight: 600; }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
+    .step { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .step-num { width: 40px; height: 40px; background: rgba(99,102,241,0.2); border: 1px solid var(--indigo); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: var(--indigo-light); flex-shrink: 0; }
+    .step h3 { font-size: 1rem; font-weight: 700; }
+    .step p { font-size: 0.875rem; color: var(--muted); }
+
+    /* ── CERT BREAKDOWN ── */
+    .breakdown { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-top: 3rem; }
+    .breakdown h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
+    .score-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .score-label { width: 200px; font-size: 0.875rem; color: var(--muted); flex-shrink: 0; }
+    .score-bar-wrap { flex: 1; background: var(--surface2); border-radius: 100px; height: 8px; }
+    .score-bar { height: 8px; border-radius: 100px; }
+    .score-pct { font-size: 0.875rem; font-weight: 700; width: 40px; text-align: right; color: var(--white); }
+    .breakdown-note { font-size: 0.8rem; color: var(--muted); margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    .breakdown-note strong { color: var(--emerald); }
+
+    /* ── API ── */
+    .api-section { background: var(--surface); }
+    .code-block { background: #0d0d14; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.8rem; line-height: 1.7; overflow-x: auto; margin-top: 1rem; position: relative; }
+    .code-block .c-green { color: #4ade80; }
+    .code-block .c-blue { color: #60a5fa; }
+    .code-block .c-yellow { color: #fbbf24; }
+    .code-block .c-purple { color: #c084fc; }
+    .code-block .c-red { color: #f87171; }
+    .code-block .c-muted { color: #6b7280; }
+    .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 6px; cursor: pointer; font-family: inherit; }
+    .copy-btn:hover { color: var(--white); }
+    .api-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
+    @media (max-width: 700px) { .api-grid { grid-template-columns: 1fr; } }
+    .api-field { margin-bottom: 0.75rem; }
+    .api-field .key { font-family: monospace; font-size: 0.8rem; color: var(--indigo-light); }
+    .api-field .val { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+    .tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.72rem; font-weight: 600; }
+    .tag-green { background: rgba(16,185,129,0.15); color: #4ade80; }
+    .tag-red { background: rgba(239,68,68,0.15); color: #f87171; }
+    .tag-blue { background: rgba(96,165,250,0.15); color: #93c5fd; }
+
+    /* ── TRACKS ── */
+    .tracks { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .track-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .track-card .track-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-bottom: 0.75rem; }
+    .track-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .track-card p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── LIVE VERIFY ── */
+    .verify-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-top: 2rem; max-width: 600px; }
+    .verify-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+    .verify-input-row { display: flex; gap: 0.75rem; }
+    .verify-input-row input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; color: var(--text); font-size: 0.9rem; outline: none; font-family: monospace; }
+    .verify-input-row input:focus { border-color: var(--indigo); }
+    #verify-result { margin-top: 1.25rem; display: none; }
+    .verify-valid { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 1.25rem; }
+    .verify-invalid { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 1.25rem; }
+    .verify-name { font-size: 1.1rem; font-weight: 700; color: var(--white); }
+    .verify-detail { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+    .verify-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+
+    /* ── COMPARE TABLE ── */
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: 0.875rem; }
+    .compare-table th, .compare-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .compare-table th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .compare-table td:first-child { color: var(--muted); }
+    .compare-table td:not(:first-child) { text-align: center; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .ours { color: var(--indigo-light); font-weight: 700; }
+    .check { color: var(--emerald); font-size: 1rem; }
+    .cross { color: var(--red); font-size: 1rem; }
+    .partial { color: var(--amber); font-size: 1rem; }
+
+    /* ── PRICING ── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+    .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+    .pricing-card.featured { border-color: var(--indigo); background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, var(--surface) 100%); }
+    .pricing-card .plan-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; }
+    .pricing-card .price { font-size: 2.25rem; font-weight: 800; color: var(--white); margin-bottom: 0.25rem; }
+    .pricing-card .price-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .pricing-card ul { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+    .pricing-card li { font-size: 0.875rem; color: var(--muted); padding: 0.35rem 0; display: flex; gap: 0.5rem; }
+    .pricing-card li::before { content: "✓"; color: var(--emerald); font-weight: 700; flex-shrink: 0; }
+
+    /* ── FAQ ── */
+    .faq { max-width: 720px; margin: 2.5rem auto 0; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 1.25rem 0; }
+    .faq-q { font-weight: 700; margin-bottom: 0.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .faq-q::after { content: "+"; color: var(--indigo-light); font-size: 1.25rem; }
+    .faq-a { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 4rem 1.5rem 2.5rem; }
+      section { padding: 3.5rem 1.5rem; }
+      .score-label { width: 140px; }
+      .verify-input-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Q<span>Forge</span></div>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#api">Verify API</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://qforge.app" class="btn btn-primary" style="font-size:0.85rem;padding:0.45rem 1rem;">For Candidates →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">For Hiring Managers &amp; Engineering Leads</div>
+  <h1>Stop hiring people who <span class="accent">passed a quiz</span>.<br>Hire people who ran the circuits.</h1>
+  <p>Every QForge certificate encodes a cryptographic proof that the holder actually wrote and executed correct quantum circuits — not memorised answers. Free API verification, no account required.</p>
+  <div class="hero-actions">
+    <a href="#live-verify" class="btn btn-primary">Verify a Certificate Now</a>
+    <a href="#api" class="btn btn-outline">View Verify API</a>
+  </div>
+  <div class="hero-stat-row">
+    <div class="hero-stat"><div class="num" id="stat-certs">—</div><div class="label">Certificates Issued</div></div>
+    <div class="hero-stat"><div class="num" id="stat-users">—</div><div class="label">Active Developers</div></div>
+    <div class="hero-stat"><div class="num" id="stat-circuits">—</div><div class="label">Circuits Executed</div></div>
+    <div class="hero-stat"><div class="num">0</div><div class="label">MCQs. Ever.</div></div>
+  </div>
+</div>
+
+<!-- PROBLEM SECTION -->
+<section style="background: var(--surface);">
+  <div class="section-inner">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Every other quantum cert is gameable</h2>
+    <p class="section-sub">AWS, Google, Cisco, and every other vendor hand out certificates to anyone who memorises a question bank. That's useless to you.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="vendor">AWS / GCP / Azure</div>
+        <h3>Multiple-choice exams</h3>
+        <p>Exam dumps for every cert are publicly posted within weeks of launch. 80% of certified candidates have never written a single line of quantum code.</p>
+        <div class="fix">QForge fix: Unique parameterised circuits per candidate — undumpable</div>
+      </div>
+      <div class="problem-card">
+        <div class="vendor">HashiCorp / Linux Foundation</div>
+        <h3>Static shareable labs</h3>
+        <p>Lab solutions get shared on Reddit and Discord the day the exam launches. Copy-paste certification.</p>
+        <div class="fix">QForge fix: Circuit DNA anti-plagiarism — detects copied circuits across users</div>
+      </div>
+      <div class="problem-card">
+        <div class="vendor">Cisco / CompTIA</div>
+        <h3>Simulated environments</h3>
+        <p>Candidates learn to game the simulator. No verification that the circuit actually produced a correct quantum state.</p>
+        <div class="fix">QForge fix: Real Qiskit Aer execution — output state verified against analytical expected values</div>
+      </div>
+      <div class="problem-card">
+        <div class="vendor">All Vendors</div>
+        <h3>Easily forged PDFs</h3>
+        <p>A LinkedIn "AWS Certified" badge takes 30 seconds in Photoshop. No employer API to validate.</p>
+        <div class="fix">QForge fix: Merkle proof-of-work hash + free public verification API</div>
+      </div>
+      <div class="problem-card">
+        <div class="vendor">All Vendors</div>
+        <h3>No understanding check</h3>
+        <p>Passing a lab doesn't mean the candidate can explain their own work. Code understanding is never tested.</p>
+        <div class="fix">QForge fix: Live 2-minute knowledge challenge about the candidate's own circuit choices</div>
+      </div>
+      <div class="problem-card">
+        <div class="vendor">All Vendors</div>
+        <h3>Annual expiry for revenue</h3>
+        <p>Forced annual renewals are a revenue model dressed up as a quality signal. Skills don't expire on a calendar.</p>
+        <div class="fix">QForge fix: Living certificates — optional refresh challenges, never forced expiry</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW A CERT IS EARNED -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">What a candidate actually does to earn a QForge certificate</h2>
+    <p class="section-sub">No training required. No study guide to buy. Just write circuits and prove they work.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Receive a unique problem</h3>
+        <p>Each candidate gets their own parameterised problem — different qubit counts, different target states. Exam dumps are mathematically useless.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Write and submit a circuit</h3>
+        <p>Candidate submits real Qiskit, Cirq, or PennyLane code directly in the QForge VS Code extension or web editor.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Circuit is executed</h3>
+        <p>The backend runs the circuit on a real Qiskit Aer simulator (or IBM hardware). Output probabilities are compared to the analytical expected state using Total Variation Distance.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Knowledge challenge</h3>
+        <p>The LLM generates 2 questions specifically about the candidate's own code choices. They have 2 minutes to answer. No pre-written answers work.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <h3>Anti-plagiarism check</h3>
+        <p>Circuit DNA fingerprint is compared against all other users' passing submissions. Copied circuits are automatically flagged and receive a score multiplier of 0.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <h3>Certificate issued with proof</h3>
+        <p>If the score ≥ 70%, a Merkle root is computed from the chain hashes of all graded submissions. This hash is the tamper-evident proof embedded in every certificate.</p>
+      </div>
+    </div>
+
+    <!-- Score breakdown -->
+    <div class="breakdown">
+      <h3>Grading Formula — Proof-of-Quantum-Work (PoQW)</h3>
+      <div class="score-row">
+        <div class="score-label">Execution Score (40%)</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:40%;background:var(--emerald);"></div></div>
+        <div class="score-pct">40%</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Knowledge Challenge (40%)</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:40%;background:var(--indigo);"></div></div>
+        <div class="score-pct">40%</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">LLM Semantic Review (20%)</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:20%;background:var(--amber);"></div></div>
+        <div class="score-pct">20%</div>
+      </div>
+      <div class="score-row" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+        <div class="score-label">× Uniqueness Multiplier</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:100%;background:linear-gradient(90deg,var(--red),var(--emerald));"></div></div>
+        <div class="score-pct">0–1×</div>
+      </div>
+      <div class="breakdown-note">
+        <strong>Passing threshold: 70%.</strong> The uniqueness multiplier is 1.0 for original work and drops to 0.0 if circuit DNA similarity exceeds 80% against another user's passing submission on the same assignment. A copied circuit cannot pass regardless of execution score.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE VERIFY -->
+<section id="live-verify" style="background: var(--surface);">
+  <div class="section-inner">
+    <div class="section-label">Instant Verification</div>
+    <h2 class="section-title">Verify a certificate in seconds</h2>
+    <p class="section-sub">Free, no account required. Works from any browser or command line.</p>
+
+    <div class="verify-box">
+      <h3>Live Certificate Lookup</h3>
+      <div class="verify-input-row">
+        <input type="text" id="cert-id-input" placeholder="QF-A1B2C3D4 or full cert ID" />
+        <button class="btn btn-primary" onclick="verifyCert()">Verify</button>
+      </div>
+      <div id="verify-result"></div>
+    </div>
+
+    <div class="api-grid" style="margin-top:2.5rem;">
+      <div>
+        <p style="font-size:0.875rem;color:var(--muted);margin-bottom:0.75rem;">Via curl:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <span class="c-green">curl</span> <span class="c-yellow">-s</span> \<br>
+          &nbsp;&nbsp;<span class="c-blue">"https://api.qforge.app/api/certification/verify/QF-XXXXXX"</span><br>
+          &nbsp;&nbsp;| <span class="c-green">jq</span> <span class="c-yellow">'.'</span>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.875rem;color:var(--muted);margin-bottom:0.75rem;">Response fields:</p>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;">
+          <div class="api-field"><div class="key">valid</div><div class="val">boolean — certificate exists and hash checks out</div></div>
+          <div class="api-field"><div class="key">holder_name</div><div class="val">string — candidate's registered name</div></div>
+          <div class="api-field"><div class="key">track_name</div><div class="val">string — e.g. "Algorithm Expert"</div></div>
+          <div class="api-field"><div class="key">issued_at</div><div class="val">ISO 8601 timestamp</div></div>
+          <div class="api-field"><div class="key">proof_of_work_hash</div><div class="val">Merkle root of submission chain hashes</div></div>
+          <div class="api-field"><div class="key">circuits_submitted</div><div class="val">number of graded circuits</div></div>
+          <div class="api-field"><div class="key">no_mcq</div><div class="val">always true — no multiple choice questions</div></div>
+          <div class="api-field"><div class="key">skills</div><div class="val">array of verified skill tags</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMPLOYER API DEEP DIVE -->
+<section id="api">
+  <div class="section-inner">
+    <div class="section-label">Employer API</div>
+    <h2 class="section-title">Integrate verification into your ATS or GitHub Actions</h2>
+    <p class="section-sub">Two endpoints, no authentication needed, rate limit 1000 req/hour per IP.</p>
+
+    <div style="margin-top:2rem;">
+      <p style="font-size:0.875rem;color:var(--muted);margin-bottom:0.5rem;font-weight:600;">GET — public certificate lookup</p>
+      <div class="code-block" style="margin-top:0;">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <span class="c-muted"># No auth required</span><br>
+        <span class="c-green">GET</span> <span class="c-blue">https://api.qforge.app/api/certification/verify/{cert_id}</span><br><br>
+        <span class="c-muted"># Example response</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="c-yellow">"valid"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"holder_name"</span>: <span class="c-green">"Alice Chen"</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"track_name"</span>: <span class="c-green">"Algorithm Expert"</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"track_category"</span>: <span class="c-green">"algorithms"</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"issued_at"</span>: <span class="c-green">"2026-02-14T09:22:11Z"</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"circuits_submitted"</span>: <span class="c-purple">8</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"no_mcq"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"proof_of_work_hash"</span>: <span class="c-green">"a3f9b2c1..."</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"skills"</span>: [<span class="c-green">"grover"</span>, <span class="c-green">"qft"</span>, <span class="c-green">"vqe"</span>, <span class="c-green">"qaoa"</span>],<br>
+        &nbsp;&nbsp;<span class="c-yellow">"portfolio"</span>: [{...}, ...],<br>
+        &nbsp;&nbsp;<span class="c-yellow">"total_points"</span>: <span class="c-purple">847</span><br>
+        }
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;">
+      <p style="font-size:0.875rem;color:var(--muted);margin-bottom:0.5rem;font-weight:600;">POST — employer-specific batch verify (returns hiring signal)</p>
+      <div class="code-block" style="margin-top:0;">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <span class="c-green">POST</span> <span class="c-blue">https://api.qforge.app/api/certification/employer-verify</span><br>
+        <span class="c-yellow">Content-Type:</span> application/json<br><br>
+        { <span class="c-yellow">"cert_id"</span>: <span class="c-green">"QF-A1B2C3D4"</span> }<br><br>
+        <span class="c-muted"># Extended response includes:</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="c-yellow">"verified"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"no_mcq"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"circuits_submitted"</span>: <span class="c-purple">8</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"execution_verified"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"knowledge_challenged"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"uniqueness_verified"</span>: <span class="c-purple">true</span>,<br>
+        &nbsp;&nbsp;<span class="c-yellow">"proof_hash"</span>: <span class="c-green">"a3f9b2c1..."</span><br>
+        }
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;">
+      <p style="font-size:0.875rem;color:var(--muted);margin-bottom:0.5rem;font-weight:600;">GitHub Actions — add to your PR workflow:</p>
+      <div class="code-block" style="margin-top:0;">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <span class="c-muted"># .github/workflows/verify-cert.yml</span><br>
+        <span class="c-blue">- name:</span> Verify QForge Certificate<br>
+        &nbsp;&nbsp;<span class="c-blue">run:</span> |<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-green">RESULT</span>=$(<span class="c-green">curl</span> -s \<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"https://api.qforge.app/api/certification/verify/$<span class="c-yellow">{{ inputs.cert_id }}</span>")<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-purple">if</span> [ "$(echo $RESULT | jq -r '.valid')" != "true" ]; <span class="c-purple">then</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-green">echo</span> "Certificate invalid"<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-red">exit 1</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="c-purple">fi</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE TABLE -->
+<section style="background: var(--surface);">
+  <div class="section-inner">
+    <div class="section-label">Comparison</div>
+    <h2 class="section-title">QForge vs. every other quantum certification</h2>
+    <div style="overflow-x:auto;">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Verification Signal</th>
+            <th class="ours">QForge</th>
+            <th>AWS Quantum</th>
+            <th>IBM Qiskit Dev</th>
+            <th>Google QML</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Real circuit execution verified</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="partial">~</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Zero multiple-choice questions</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Anti-plagiarism / copy detection</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Unique problem per candidate</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Code understanding challenge</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Tamper-evident cryptographic proof</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Free public verification API</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Circuit portfolio included</td><td class="ours"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>LinkedIn/GitHub shareable badge</td><td class="ours"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Candidate cost</td><td class="ours">$49–$199</td><td>$300</td><td>$200</td><td>$200</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Certification Tracks</div>
+    <h2 class="section-title">Six skill tracks, each with a distinct hiring signal</h2>
+    <p class="section-sub">Filter candidates by track when writing job requirements. Each certificate links to a full circuit portfolio.</p>
+    <div class="tracks">
+      <div class="track-card"><div class="track-dot" style="background:#6366f1;"></div><h4>Quantum Fundamentals</h4><p>Gates, superposition, measurement, Bell states. $49. 5 assignments.</p></div>
+      <div class="track-card"><div class="track-dot" style="background:#8b5cf6;"></div><h4>Circuit Design Pro</h4><p>Optimization, transpilation, noise-aware design. $99. 7 assignments.</p></div>
+      <div class="track-card"><div class="track-dot" style="background:#3b82f6;"></div><h4>Algorithm Expert</h4><p>Grover, QFT, VQE, QAOA, Shor's algorithm. $149. 8 assignments.</p></div>
+      <div class="track-card"><div class="track-dot" style="background:#ef4444;"></div><h4>Error Correction Specialist</h4><p>Surface codes, Steane, fault-tolerant gates. $149. 8 assignments.</p></div>
+      <div class="track-card"><div class="track-dot" style="background:#10b981;"></div><h4>Hardware Specialist</h4><p>IBM/IonQ/Rigetti backends, connectivity constraints. $149. 8 assignments.</p></div>
+      <div class="track-card"><div class="track-dot" style="background:#f59e0b;"></div><h4>Quantum ML</h4><p>QNN, kernel methods, variational classifiers. $199. 10 assignments.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING FOR EMPLOYERS -->
+<section id="pricing" style="background: var(--surface);">
+  <div class="section-inner">
+    <div class="section-label">Bulk Hiring Programs</div>
+    <h2 class="section-title">We screen so you don't have to</h2>
+    <p class="section-sub">All verification APIs are free forever. Bulk assessment programs let you test candidates before the interview stage.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="plan-name">Free Forever</div>
+        <div class="price">$0</div>
+        <div class="price-sub">No account needed</div>
+        <ul>
+          <li>Unlimited certificate verification via API</li>
+          <li>Proof-of-work hash validation</li>
+          <li>View candidate circuit portfolio</li>
+          <li>LinkedIn/GitHub badge verification</li>
+        </ul>
+        <a href="#api" class="btn btn-outline" style="width:100%;text-align:center;">View API Docs</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="plan-name">Talent Marketplace</div>
+        <div class="price">$299</div>
+        <div class="price-sub">per job posting (30 days)</div>
+        <ul>
+          <li>Post directly to QForge certified dev pool</li>
+          <li>Filter by track, score, and skills</li>
+          <li>Candidates have verified portfolios</li>
+          <li>Direct messaging to applicants</li>
+          <li>ATS webhook integration</li>
+        </ul>
+        <a href="https://qforge.app/employers/post-job" class="btn btn-primary" style="width:100%;text-align:center;">Post a Job</a>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name">University / Corporate</div>
+        <div class="price">Custom</div>
+        <div class="price-sub">cohort pricing</div>
+        <ul>
+          <li>$1,200/semester — 30 students</li>
+          <li>$2,500 — corporate team of 10</li>
+          <li>Instructor dashboard + progress tracking</li>
+          <li>Custom assignment tracks</li>
+          <li>Bulk certificate issuance</li>
+        </ul>
+        <a href="mailto:enterprise@qforge.app" class="btn btn-outline" style="width:100%;text-align:center;">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Questions from hiring managers</h2>
+    <div class="faq">
+      <div class="faq-item"><div class="faq-q">Can candidates cheat the system?</div><div class="faq-a">Each candidate receives a uniquely parameterised problem. Circuit DNA fingerprinting detects code copied from other users with >80% similarity. The live knowledge challenge requires answering specific questions about the candidate's own code within 120 seconds — pre-written answers don't fit. The combination makes systematic cheating impractical.</div></div>
+      <div class="faq-item"><div class="faq-q">What is the "proof-of-work hash" and why does it matter?</div><div class="faq-a">It's a Merkle root computed from the chain hashes of all the candidate's graded submissions. If any submission record is modified after issuance, the root hash changes and the certificate becomes invalid. You can verify it independently using any SHA-256 implementation — no trust in QForge required.</div></div>
+      <div class="faq-item"><div class="faq-q">How long does it take a candidate to earn a certificate?</div><div class="faq-a">Typically 3–8 hours of focused work per track depending on experience. There's no required course or training material to purchase — candidates demonstrate skills they already have.</div></div>
+      <div class="faq-item"><div class="faq-q">Do certificates expire?</div><div class="faq-a">No. QForge certificates don't have forced expiry dates. Candidates can optionally take refresh challenges to add an "Updated 2026" badge to their certificate, but the original certificate remains fully valid indefinitely.</div></div>
+      <div class="faq-item"><div class="faq-q">What quantum frameworks are supported?</div><div class="faq-a">Qiskit (IBM), Cirq (Google), and PennyLane (Xanadu). Candidates choose their preferred framework — the execution oracle runs the circuit and scores the output state regardless of which framework was used.</div></div>
+      <div class="faq-item"><div class="faq-q">Is the verification API available for my ATS?</div><div class="faq-a">Yes. The GET endpoint requires no authentication and returns JSON. We provide a GitHub Actions example above. If you need a webhook integration or custom fields, contact enterprise@qforge.app.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 QForge. The GitHub Copilot of Quantum Computing.</p>
+  <p style="margin-top:0.5rem;">
+    <a href="https://qforge.app">For Candidates</a> ·
+    <a href="https://api.qforge.app/docs">API Docs</a> ·
+    <a href="mailto:enterprise@qforge.app">Enterprise Sales</a> ·
+    <a href="https://qforge.app/privacy">Privacy</a>
+  </p>
+</footer>
+
+<script>
+  // Load platform stats
+  async function loadStats() {
+    try {
+      const r = await fetch('https://api.qforge.app/api/public/stats');
+      if (!r.ok) return;
+      const d = await r.json();
+      if (d.total_certificates !== undefined) document.getElementById('stat-certs').textContent = d.total_certificates.toLocaleString();
+      if (d.total_users !== undefined) document.getElementById('stat-users').textContent = d.total_users.toLocaleString();
+      if (d.total_circuits !== undefined) document.getElementById('stat-circuits').textContent = d.total_circuits.toLocaleString();
+    } catch (_) {}
+  }
+  loadStats();
+
+  // Live verification
+  async function verifyCert() {
+    const input = document.getElementById('cert-id-input');
+    const resultDiv = document.getElementById('verify-result');
+    const certId = input.value.trim();
+    if (!certId) return;
+
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<p style="color:var(--muted);font-size:0.875rem;">Checking...</p>';
+
+    try {
+      const r = await fetch(`https://api.qforge.app/api/certification/verify/${encodeURIComponent(certId)}`);
+      const d = await r.json();
+
+      if (d.valid) {
+        const skills = (d.skills || []).map(s => `<span class="tag tag-blue">${s}</span>`).join('');
+        resultDiv.innerHTML = `
+          <div class="verify-valid">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
+              <span style="color:var(--emerald);font-size:1.25rem;">✓</span>
+              <div>
+                <div class="verify-name">${escHtml(d.holder_name || 'Unknown')}</div>
+                <div class="verify-detail">${escHtml(d.track_name || '')} · Issued ${escHtml((d.issued_at || '').split('T')[0])}</div>
+              </div>
+            </div>
+            <div class="verify-badges">
+              <span class="tag tag-green">Execution Verified</span>
+              <span class="tag tag-green">Knowledge Challenged</span>
+              <span class="tag tag-green">Anti-Plagiarism Passed</span>
+              <span class="tag tag-green">${d.circuits_submitted || 0} Circuits</span>
+              ${skills}
+            </div>
+            <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted);font-family:monospace;word-break:break-all;">Proof hash: ${escHtml(d.proof_of_work_hash || 'N/A')}</div>
+          </div>`;
+      } else {
+        resultDiv.innerHTML = `
+          <div class="verify-invalid">
+            <span style="color:var(--red);">✗</span> Certificate <strong>${escHtml(certId)}</strong> not found or invalid.
+          </div>`;
+      }
+    } catch (e) {
+      resultDiv.innerHTML = `<div class="verify-invalid">Could not reach verification API. Try: <a href="https://api.qforge.app/api/certification/verify/${encodeURIComponent(certId)}" target="_blank">open directly</a></div>`;
+    }
+  }
+
+  document.getElementById('cert-id-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') verifyCert();
+  });
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function copyCode(btn) {
+    const block = btn.closest('.code-block');
+    const text = block.innerText.replace('Copy\n','').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
