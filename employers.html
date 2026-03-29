@@ -193,22 +193,22 @@
   <div class="section-inner">
     <div class="section-label">The Problem</div>
     <h2 class="section-title">Every other quantum cert is gameable</h2>
-    <p class="section-sub">AWS, Google, Cisco, and every other vendor hand out certificates to anyone who memorises a question bank. That's useless to you.</p>
+    <p class="section-sub">Every major vendor hands out certificates to anyone who memorises a question bank. That's useless to you.</p>
     <div class="problem-grid">
       <div class="problem-card">
-        <div class="vendor">AWS / GCP / Azure</div>
+        <div class="vendor">Cloud Vendor Certifications</div>
         <h3>Multiple-choice exams</h3>
         <p>Exam dumps for every cert are publicly posted within weeks of launch. 80% of certified candidates have never written a single line of quantum code.</p>
         <div class="fix">QForge fix: Unique parameterised circuits per candidate — undumpable</div>
       </div>
       <div class="problem-card">
-        <div class="vendor">HashiCorp / Linux Foundation</div>
+        <div class="vendor">Infrastructure Certifications</div>
         <h3>Static shareable labs</h3>
         <p>Lab solutions get shared on Reddit and Discord the day the exam launches. Copy-paste certification.</p>
         <div class="fix">QForge fix: Circuit DNA anti-plagiarism — detects copied circuits across users</div>
       </div>
       <div class="problem-card">
-        <div class="vendor">Cisco / CompTIA</div>
+        <div class="vendor">Networking Certifications</div>
         <h3>Simulated environments</h3>
         <p>Candidates learn to game the simulator. No verification that the circuit actually produced a correct quantum state.</p>
         <div class="fix">QForge fix: Real Qiskit Aer execution — output state verified against analytical expected values</div>
@@ -216,7 +216,7 @@
       <div class="problem-card">
         <div class="vendor">All Vendors</div>
         <h3>Easily forged PDFs</h3>
-        <p>A LinkedIn "AWS Certified" badge takes 30 seconds in Photoshop. No employer API to validate.</p>
+        <p>A certification badge takes 30 seconds to fake in Photoshop. No employer API to validate.</p>
         <div class="fix">QForge fix: Merkle proof-of-work hash + free public verification API</div>
       </div>
       <div class="problem-card">
@@ -426,9 +426,9 @@
           <tr>
             <th>Verification Signal</th>
             <th class="ours">QForge</th>
-            <th>AWS Quantum</th>
-            <th>IBM Qiskit Dev</th>
-            <th>Google QML</th>
+            <th>Cloud Provider Certs</th>
+            <th>Hardware Vendor Certs</th>
+            <th>Framework Certs</th>
           </tr>
         </thead>
         <tbody>
@@ -459,7 +459,7 @@
       <div class="track-card"><div class="track-dot" style="background:#8b5cf6;"></div><h4>Circuit Design Pro</h4><p>Optimization, transpilation, noise-aware design. $99. 7 assignments.</p></div>
       <div class="track-card"><div class="track-dot" style="background:#3b82f6;"></div><h4>Algorithm Expert</h4><p>Grover, QFT, VQE, QAOA, Shor's algorithm. $149. 8 assignments.</p></div>
       <div class="track-card"><div class="track-dot" style="background:#ef4444;"></div><h4>Error Correction Specialist</h4><p>Surface codes, Steane, fault-tolerant gates. $149. 8 assignments.</p></div>
-      <div class="track-card"><div class="track-dot" style="background:#10b981;"></div><h4>Hardware Specialist</h4><p>IBM/IonQ/Rigetti backends, connectivity constraints. $149. 8 assignments.</p></div>
+      <div class="track-card"><div class="track-dot" style="background:#10b981;"></div><h4>Hardware Specialist</h4><p>Real QPU backends, connectivity constraints, noise mitigation. $149. 8 assignments.</p></div>
       <div class="track-card"><div class="track-dot" style="background:#f59e0b;"></div><h4>Quantum ML</h4><p>QNN, kernel methods, variational classifiers. $199. 10 assignments.</p></div>
     </div>
   </div>
@@ -524,14 +524,14 @@
       <div class="faq-item"><div class="faq-q">What is the "proof-of-work hash" and why does it matter?</div><div class="faq-a">It's a Merkle root computed from the chain hashes of all the candidate's graded submissions. If any submission record is modified after issuance, the root hash changes and the certificate becomes invalid. You can verify it independently using any SHA-256 implementation — no trust in QForge required.</div></div>
       <div class="faq-item"><div class="faq-q">How long does it take a candidate to earn a certificate?</div><div class="faq-a">Typically 3–8 hours of focused work per track depending on experience. There's no required course or training material to purchase — candidates demonstrate skills they already have.</div></div>
       <div class="faq-item"><div class="faq-q">Do certificates expire?</div><div class="faq-a">No. QForge certificates don't have forced expiry dates. Candidates can optionally take refresh challenges to add an "Updated 2026" badge to their certificate, but the original certificate remains fully valid indefinitely.</div></div>
-      <div class="faq-item"><div class="faq-q">What quantum frameworks are supported?</div><div class="faq-a">Qiskit (IBM), Cirq (Google), and PennyLane (Xanadu). Candidates choose their preferred framework — the execution oracle runs the circuit and scores the output state regardless of which framework was used.</div></div>
+      <div class="faq-item"><div class="faq-q">What quantum frameworks are supported?</div><div class="faq-a">Qiskit, Cirq, and PennyLane. Candidates choose their preferred framework — the execution oracle runs the circuit and scores the output state regardless of which framework was used.</div></div>
       <div class="faq-item"><div class="faq-q">Is the verification API available for my ATS?</div><div class="faq-a">Yes. The GET endpoint requires no authentication and returns JSON. We provide a GitHub Actions example above. If you need a webhook integration or custom fields, contact enterprise@qforge.app.</div></div>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2026 QForge. The GitHub Copilot of Quantum Computing.</p>
+  <p>© 2026 QForge. The AI Copilot for Quantum Computing.</p>
   <p style="margin-top:0.5rem;">
     <a href="https://qforge.app">For Candidates</a> ·
     <a href="https://api.qforge.app/docs">API Docs</a> ·
