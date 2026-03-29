@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
+  <defs>
+    <!-- Background: deep navy radial -->
+    <radialGradient id="bg" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#0e1e45"/>
+      <stop offset="100%" stop-color="#080f1a"/>
+    </radialGradient>
+
+    <!-- Main brand gradient: light indigo → indigo → cyan (diagonal) -->
+    <linearGradient id="g" x1="15" y1="15" x2="85" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#a5b4fc"/>
+      <stop offset="40%"  stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+
+    <!-- Glow: ring, tail, gates, arrow -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Strong glow: center qubit dot -->
+    <filter id="core" x="-300%" y="-300%" width="700%" height="700%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b1"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="b2"/>
+      <feMerge>
+        <feMergeNode in="b1"/>
+        <feMergeNode in="b2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle ambient halo behind ring -->
+    <filter id="halo" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- ── Background ── -->
+  <rect width="100" height="100" rx="18" ry="18" fill="url(#bg)"/>
+
+  <!-- ── Ambient halo (indigo glow behind ring) ── -->
+  <circle cx="50" cy="48" r="27" fill="none" stroke="#6366f1" stroke-width="14"
+          opacity="0.12" filter="url(#halo)"/>
+
+  <!-- ── Q tail (drawn before ring so ring overlaps it cleanly) ── -->
+  <line x1="64" y1="62" x2="83" y2="81"
+        stroke="url(#g)" stroke-width="6" stroke-linecap="round"
+        filter="url(#glow)"/>
+
+  <!-- ── Q ring (quantum circuit) ── -->
+  <circle cx="50" cy="48" r="27" fill="none"
+          stroke="url(#g)" stroke-width="5.5"
+          filter="url(#glow)"/>
+
+  <!-- ── Gate node diamonds: N / E / S / W ── -->
+  <!-- North  (50, 21) half-diag = 4 -->
+  <polygon points="50,17  54,21  50,25  46,21"  fill="url(#g)" filter="url(#glow)"/>
+  <!-- East   (77, 48) -->
+  <polygon points="73,48  77,44  81,48  77,52"  fill="url(#g)" filter="url(#glow)"/>
+  <!-- South  (50, 75) -->
+  <polygon points="50,71  54,75  50,79  46,75"  fill="url(#g)" filter="url(#glow)"/>
+  <!-- West   (23, 48) -->
+  <polygon points="19,48  23,44  27,48  23,52"  fill="url(#g)" filter="url(#glow)"/>
+
+  <!-- ── Bloch sphere (inside ring, r=14) ── -->
+  <!-- Outer sphere outline -->
+  <circle cx="50" cy="48" r="14" fill="none" stroke="#1e3a5a" stroke-width="0.9"/>
+  <!-- Equatorial ellipse (xy-plane, dashed) -->
+  <ellipse cx="50" cy="48" rx="14" ry="4.5"
+           fill="none" stroke="#253f60" stroke-width="0.75"
+           stroke-dasharray="2,1.6"/>
+  <!-- Polar axis (z-axis) -->
+  <line x1="50" y1="34" x2="50" y2="62"
+        stroke="#253f60" stroke-width="0.75"/>
+  <!-- Horizontal axis hint (x-axis, subtle dashed) -->
+  <line x1="36" y1="48" x2="64" y2="48"
+        stroke="#253f60" stroke-width="0.5" stroke-dasharray="1.5,2"/>
+
+  <!-- State vector |ψ⟩ pointing upper-right (superposition) -->
+  <line x1="50" y1="48" x2="59.5" y2="38.5"
+        stroke="url(#g)" stroke-width="1.9" stroke-linecap="round"
+        filter="url(#glow)"/>
+  <!-- Arrowhead at (59.5, 38.5) pointing ~NE -->
+  <polygon points="59.5,38.5  56,40.2  58.3,42.4"
+           fill="#06b6d4" filter="url(#glow)"/>
+
+  <!-- Pole markers |0⟩ top / |1⟩ bottom -->
+  <circle cx="50" cy="34" r="1.4" fill="#a5b4fc" opacity="0.85"/>
+  <circle cx="50" cy="62" r="1.4" fill="#06b6d4" opacity="0.85"/>
+
+  <!-- ── Center qubit dot (bright, glowing) ── -->
+  <circle cx="50" cy="48" r="2.8" fill="url(#g)" filter="url(#core)"/>
+</svg>

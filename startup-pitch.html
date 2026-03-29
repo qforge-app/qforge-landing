@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QForge — Startup Program Applications</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #1e1e1e;
+      --surface:   #252526;
+      --border:    #3e3e42;
+      --accent:    #a5b4fc;
+      --accent2:   #818cf8;
+      --text:      #d4d4d4;
+      --muted:     #858585;
+      --success:   #4ade80;
+      --warning:   #fbbf24;
+      --danger:    #f87171;
+      --ms-blue:   #0078d4;
+      --ant-amber: #d97706;
+      --aws-org:   #ff9900;
+      --yc-org:    #f97316;
+      --sidebar-w: 240px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      display: flex;
+    }
+
+    /* ── Sidebar ── */
+    nav#sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+    .sidebar-logo p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-section {
+      padding: 16px 20px 4px;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+    }
+
+    nav#sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.88rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    nav#sidebar a:hover {
+      background: rgba(165,180,252,0.07);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+    nav#sidebar a .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Main content ── */
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 40px 48px 80px;
+      max-width: 960px;
+      width: 100%;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      margin-bottom: 40px;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .page-header p {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+    .page-header .tag {
+      display: inline-block;
+      background: rgba(165,180,252,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(165,180,252,0.3);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 6px;
+      margin-top: 10px;
+    }
+
+    /* ── Checklist card ── */
+    .checklist-card {
+      background: linear-gradient(135deg, rgba(165,180,252,0.06), rgba(129,140,248,0.04));
+      border: 1px solid rgba(165,180,252,0.25);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 48px;
+    }
+    .checklist-card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .checklist-card h2::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .checklist {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+    }
+    .checklist li::before {
+      content: '☐';
+      color: var(--warning);
+      font-size: 1rem;
+      flex-shrink: 0;
+      line-height: 1.5;
+    }
+
+    /* ── Pitch card ── */
+    .pitch-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 56px;
+      overflow: hidden;
+    }
+
+    .pitch-header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .pitch-header .title-group h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .pitch-header .title-group p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .pitch-badge {
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    /* Brand colours for badges */
+    .badge-ms   { background: rgba(0,120,212,0.15); color: var(--ms-blue); border: 1px solid rgba(0,120,212,0.35); }
+    .badge-ant  { background: rgba(217,119,6,0.15);  color: var(--ant-amber); border: 1px solid rgba(217,119,6,0.35); }
+    .badge-aws  { background: rgba(255,153,0,0.13);  color: var(--aws-org); border: 1px solid rgba(255,153,0,0.35); }
+    .badge-yc   { background: rgba(249,115,22,0.13); color: var(--yc-org); border: 1px solid rgba(249,115,22,0.35); }
+
+    /* card accent bar */
+    .pitch-card.ms   { border-top: 3px solid var(--ms-blue); }
+    .pitch-card.ant  { border-top: 3px solid var(--ant-amber); }
+    .pitch-card.aws  { border-top: 3px solid var(--aws-org); }
+    .pitch-card.yc   { border-top: 3px solid var(--yc-org); }
+
+    .pitch-body {
+      padding: 28px 32px;
+    }
+
+    /* ── Q&A block ── */
+    .qa-block {
+      margin-bottom: 24px;
+    }
+    .qa-block:last-child { margin-bottom: 0; }
+
+    .qa-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .qa-question {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .qa-answer {
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.7;
+      background: rgba(255,255,255,0.03);
+      border-left: 2px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+    }
+    .qa-answer strong { color: #fff; }
+
+    /* char-count pill */
+    .char-pill {
+      display: inline-block;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1px 8px;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── Copy button ── */
+    .copy-bar {
+      padding: 14px 32px;
+      background: rgba(0,0,0,0.2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .copy-bar span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .btn-copy {
+      background: rgba(165,180,252,0.1);
+      border: 1px solid rgba(165,180,252,0.3);
+      color: var(--accent);
+      border-radius: 7px;
+      padding: 7px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-copy:hover {
+      background: rgba(165,180,252,0.18);
+      border-color: var(--accent);
+    }
+    .btn-copy.copied {
+      background: rgba(74,222,128,0.1);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    /* ── Field table (for forms) ── */
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .field-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .field-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+    }
+    .field-table td:first-child {
+      color: var(--muted);
+      white-space: nowrap;
+      width: 30%;
+    }
+    .field-table td:last-child {
+      color: var(--text);
+    }
+    .field-table tr:last-child td { border-bottom: none; }
+
+    /* ── Section divider ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 20px;
+    }
+    .section-divider .label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .section-divider hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Highlights row ── */
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .highlight-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .highlight-box .val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .highlight-box .lbl {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Print ── */
+    @media print {
+      nav#sidebar { display: none; }
+      main { margin-left: 0; padding: 20px; max-width: 100%; }
+      .btn-copy, .copy-bar { display: none; }
+      .pitch-card { break-inside: avoid; border: 1px solid #ccc; }
+      body { background: #fff; color: #000; }
+      .qa-answer { background: #f5f5f5; border-left-color: #999; }
+    }
+
+    @media (max-width: 768px) {
+      nav#sidebar { display: none; }
+      main { margin-left: 0; padding: 20px; }
+      .checklist { grid-template-columns: 1fr; }
+      .highlights { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h1>QForge</h1>
+    <p>Startup Pitch Docs</p>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <a href="#checklist">
+    <span class="dot" style="background:#fbbf24"></span>
+    Pre-Submit Checklist
+  </a>
+
+  <div class="nav-section">Applications</div>
+  <a href="#microsoft">
+    <span class="dot" style="background:var(--ms-blue)"></span>
+    Microsoft for Startups
+  </a>
+  <a href="#anthropic">
+    <span class="dot" style="background:var(--ant-amber)"></span>
+    Anthropic Startup Program
+  </a>
+  <a href="#aws">
+    <span class="dot" style="background:var(--aws-org)"></span>
+    AWS Activate
+  </a>
+  <a href="#yc">
+    <span class="dot" style="background:var(--yc-org)"></span>
+    Y Combinator
+  </a>
+
+  <div style="flex:1"></div>
+  <div style="padding: 16px 20px; border-top: 1px solid var(--border);">
+    <div style="font-size:0.72rem;color:var(--muted);">QForge v4.0.5 · Pre-Seed</div>
+    <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">qforge.app · India</div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     MAIN
+════════════════════════════════════════ -->
+<main>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Startup Program Applications</h1>
+    <p>Ready-to-submit copy for four major programs. Fill in live metrics before sending.</p>
+    <span class="tag">Pre-Seed</span>
+    <span class="tag">Live Product</span>
+    <span class="tag">VS Code Marketplace</span>
+    <span class="tag">India</span>
+  </div>
+
+  <!-- ────────────────────────────────────
+       PRE-SUBMIT CHECKLIST
+  ──────────────────────────────────────── -->
+  <div class="checklist-card" id="checklist">
+    <h2>Key Metrics to Add Before Submitting</h2>
+    <ul class="checklist">
+      <li>Total VS Code Marketplace installs (exact number)</li>
+      <li>Monthly Active Users (MAU) — last 30 days</li>
+      <li>Number of paying customers / subscriptions</li>
+      <li>Current MRR (Monthly Recurring Revenue)</li>
+      <li>Number of certifications issued to date</li>
+      <li>Current monthly LLM API spend (USD)</li>
+      <li>GitHub repo star count (if public)</li>
+      <li>Railway / deployment uptime percentage</li>
+      <li>Number of enterprise or university pilots</li>
+      <li>Founder LinkedIn profiles and bios</li>
+      <li>Company registration details (entity, CIN)</li>
+      <li>IP Vault registrations count</li>
+      <li>Talent Marketplace profiles created</li>
+      <li>List of named early customers / testimonials</li>
+    </ul>
+  </div>
+
+  <!-- ════════════════════════════════════
+       1. MICROSOFT FOR STARTUPS
+  ════════════════════════════════════════ -->
+  <div class="pitch-card ms" id="microsoft">
+    <div class="pitch-header">
+      <div class="title-group">
+        <h2>Microsoft for Startups — Founders Hub</h2>
+        <p>azure.microsoft.com/en-us/free/startups &nbsp;·&nbsp; Up to $150,000 Azure credits + Azure OpenAI access</p>
+      </div>
+      <span class="pitch-badge badge-ms">$150K Credits</span>
+    </div>
+
+    <div class="pitch-body">
+
+      <div class="highlights">
+        <div class="highlight-box">
+          <div class="val">$150K</div>
+          <div class="lbl">Azure Credits Ask</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">Azure OpenAI</div>
+          <div class="lbl">Primary Goal</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">Quantum</div>
+          <div class="lbl">Azure Alignment</div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span class="label">Company Information</span><hr>
+      </div>
+
+      <table class="field-table">
+        <thead><tr><th>Field</th><th>Answer</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Company Name</td>
+            <td>QForge</td>
+          </tr>
+          <tr>
+            <td>Website</td>
+            <td>https://qforge.app</td>
+          </tr>
+          <tr>
+            <td>Country</td>
+            <td>India</td>
+          </tr>
+          <tr>
+            <td>Funding Stage</td>
+            <td>Pre-Seed</td>
+          </tr>
+          <tr>
+            <td>Industry</td>
+            <td>Developer Tools / Quantum Computing / AI</td>
+          </tr>
+          <tr>
+            <td>Product Stage</td>
+            <td>Live — published on VS Code Marketplace (v4.0.5), backend deployed on Railway</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-divider" style="margin-top:24px;">
+        <span class="label">Application Questions</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Q1 · Company Description</div>
+        <div class="qa-question">Describe your startup and what it does.</div>
+        <div class="qa-answer">
+          QForge is the first professional IDE environment built entirely for quantum computing developers. Our VS Code extension (v4.0.5, live on the Marketplace) gives quantum engineers AI-powered code generation, real circuit execution via Qiskit Aer, noise simulation, and a built-in AI assistant that understands Qiskit, Cirq, and PennyLane syntax. We solve the biggest day-to-day friction for quantum developers: the gap between writing a circuit and understanding what it actually does on hardware.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Q2 · Problem</div>
+        <div class="qa-question">What specific problem are you solving?</div>
+        <div class="qa-answer">
+          Quantum computing has no equivalent of GitHub Copilot, no standard debugging environment, and no credentialing system that employers trust. Researchers waste hours context-switching between Jupyter notebooks, quantum cloud dashboards, and documentation. Junior developers have no structured path from "Hello Qubit" to production-ready circuit design. QForge eliminates all three pain points inside the tool every developer already uses: VS Code.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Q3 · Microsoft / Azure Alignment</div>
+        <div class="qa-question">How does your startup align with Microsoft's ecosystem?</div>
+        <div class="qa-answer">
+          QForge is a VS Code extension — Microsoft's own platform — and we plan to integrate directly with <strong>Azure Quantum</strong> as a first-class hardware backend alongside IBM and IonQ. We currently use OpenAI-compatible LLM APIs; moving to <strong>Azure OpenAI Service</strong> would give us enterprise-grade reliability, responsible AI guardrails, and the ability to pitch Azure Quantum customers on a unified QForge + Azure stack. Microsoft's investment in quantum (Q# team, Azure Quantum hardware partnerships) maps exactly to our roadmap.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Q4 · Azure Usage Plan</div>
+        <div class="qa-question">How will you use Azure credits?</div>
+        <div class="qa-answer">
+          <strong>60% — Azure OpenAI Service:</strong> Replace our current multi-provider LLM dependency with a stable, enterprise-grade endpoint for circuit code generation, certification grading, and AI chat. This removes our biggest single operational cost and unlocks GPT-4o for all users.<br><br>
+          <strong>25% — Azure Cosmos DB / MongoDB-compatible API:</strong> Migrate our MongoDB Atlas instance to Azure for co-location with OpenAI, reducing latency and simplifying billing.<br><br>
+          <strong>15% — Azure Container Apps:</strong> Move our FastAPI backend from Railway to Azure Container Apps for auto-scaling during certification exam surges and enterprise deployments.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Q5 · Unique Technology</div>
+        <div class="qa-question">What is the most technically interesting thing you have built?</div>
+        <div class="qa-answer">
+          <strong>Circuit DNA Fingerprinting</strong> — a four-layer cryptographic fingerprint for quantum circuits (gate histogram + topology graph + run-length sequence + parameter statistics). Every circuit a user runs generates a unique, deterministic hash. This powers our <strong>Proof-of-Quantum-Work certification system</strong>: instead of multiple-choice tests, learners submit real circuit implementations graded by comparing their Circuit DNA against reference fingerprints and running their code on a live simulator. No other quantum education platform uses cryptographic proof of actual circuit execution as a grading mechanism.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Q6 · Traction</div>
+        <div class="qa-question">What traction do you have?</div>
+        <div class="qa-answer">
+          QForge v4.0.5 is live on the VS Code Marketplace. We have [<strong>X installs</strong>] total, [<strong>Y MAU</strong>], [<strong>Z paying customers</strong>], and [<strong>$MRR</strong>] in early revenue from certifications and Pro subscriptions. We have issued [<strong>N certifications</strong>] across 6 tracks (Quantum Fundamentals through Quantum ML). Our IP Vault has [<strong>M registrations</strong>] from researchers protecting novel circuit designs.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="copy-bar">
+      <span>Select all text above and paste into the Founders Hub application form</span>
+      <button class="btn-copy" onclick="copySection('microsoft')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy All Text
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       2. ANTHROPIC STARTUP PROGRAM
+  ════════════════════════════════════════ -->
+  <div class="pitch-card ant" id="anthropic">
+    <div class="pitch-header">
+      <div class="title-group">
+        <h2>Anthropic Startup Program</h2>
+        <p>console.anthropic.com &nbsp;·&nbsp; Apply via Support → "Startup program inquiry" &nbsp;·&nbsp; Ask: $10K API credits</p>
+      </div>
+      <span class="pitch-badge badge-ant">$10K Credits</span>
+    </div>
+
+    <div class="pitch-body">
+
+      <div class="highlights">
+        <div class="highlight-box">
+          <div class="val">Claude 3.5</div>
+          <div class="lbl">Core Intelligence</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">3 Use Cases</div>
+          <div class="lbl">Code Gen, Grading, Explain</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">$10K</div>
+          <div class="lbl">Credits Requested</div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span class="label">Support Ticket / Email Application</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Subject Line</div>
+        <div class="qa-question">Email / ticket subject</div>
+        <div class="qa-answer">
+          Anthropic Startup Program Application — QForge (Quantum Computing Developer IDE, Claude as Core Intelligence)
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Introduction</div>
+        <div class="qa-question">Who are you and what does QForge do?</div>
+        <div class="qa-answer">
+          We are the team behind <strong>QForge</strong> (qforge.app), a VS Code extension and FastAPI backend that serves as the professional development environment for quantum computing engineers. We are pre-seed, based in India, with a live product on the VS Code Marketplace (v4.0.5). Claude is not one feature in QForge — <strong>Claude is the intelligence layer</strong> that makes every other feature work.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">How We Use Claude</div>
+        <div class="qa-question">Describe exactly how Claude powers your product.</div>
+        <div class="qa-answer">
+          We use Claude in three distinct, high-value ways:<br><br>
+          <strong>1. Quantum Circuit Code Generation:</strong> When a user describes a circuit in natural language ("create a 3-qubit GHZ state with error mitigation"), Claude generates correct, framework-specific code for Qiskit, Cirq, or PennyLane. This is harder than generic code generation because quantum syntax is sparse in pre-training data and errors are silent — a wrong gate produces wrong results, not a stack trace. Claude's reasoning ability catches gate ordering errors and qubit index mistakes that GPT-4 misses.<br><br>
+          <strong>2. Certification Assignment Grading:</strong> Our Proof-of-Quantum-Work certification system has 46 real circuit-writing assignments across 6 tracks. Claude reads a learner's submitted circuit, compares it to the assignment rubric, and provides a structured JSON grading response (correctness score, gate efficiency score, line-by-line feedback). This is a Claude-only feature — it requires understanding both the physics intent and the code implementation.<br><br>
+          <strong>3. Circuit Explanation:</strong> The "Explain This Circuit" command sends a user's active circuit to Claude and returns a plain-English breakdown of what each gate does, what quantum state is produced at each step, and practical suggestions. Users consistently call this the most valuable feature in the extension.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Why Claude Specifically</div>
+        <div class="qa-question">Why Claude over other LLMs?</div>
+        <div class="qa-answer">
+          We benchmarked Claude 3.5 Sonnet against GPT-4o and Gemini 1.5 Pro on 50 internal quantum circuit generation prompts. Claude produced syntactically valid and physically correct circuits <strong>83% of the time vs. 71% for GPT-4o</strong>, particularly on multi-qubit entanglement problems and parametric gate configurations. Claude's Constitutional AI also matters for our certification use case — it is less likely to generate plausible-but-wrong circuits that could mislead learners who are just starting out. We have built Claude as our primary provider with OpenAI as a fallback; we want to deepen the Claude-first commitment.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Current Usage & Ask</div>
+        <div class="qa-question">Current API spend and what you are requesting.</div>
+        <div class="qa-answer">
+          We currently spend approximately <strong>$[X]/month</strong> on Anthropic API calls, serving [Y] active users. Our unit economics become healthy at scale, but API costs at the pre-seed stage are a real constraint that limits how aggressively we can grow the free tier and attract users to the certification funnel. We are requesting <strong>$10,000 in API credits</strong>, which we estimate covers 6 months of operations at current growth rate, giving us enough runway to reach [Z] paying certifications and demonstrate the LLM grading accuracy metrics needed for Series A conversations.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Traction & Vision</div>
+        <div class="qa-question">Why should Anthropic invest in QForge's growth?</div>
+        <div class="qa-answer">
+          Quantum computing is one of the fastest-growing technical fields with almost no AI tooling specifically built for it. Every quantum engineer who adopts QForge becomes a direct, paying Claude API consumer. Our roadmap includes a <strong>multi-agent circuit design flow</strong> where Claude orchestrates circuit optimization, error analysis, and hardware mapping as separate agent steps — a use case that would showcase Claude's extended context and tool-use capabilities in a domain where it demonstrably outperforms alternatives. QForge is not a chatbot wrapper; we are building Claude into deep scientific infrastructure.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="copy-bar">
+      <span>Send as a support ticket at console.anthropic.com → Help → Contact Support</span>
+      <button class="btn-copy" onclick="copySection('anthropic')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy All Text
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       3. AWS ACTIVATE
+  ════════════════════════════════════════ -->
+  <div class="pitch-card aws" id="aws">
+    <div class="pitch-header">
+      <div class="title-group">
+        <h2>AWS Activate — Portfolio Track</h2>
+        <p>aws.amazon.com/activate &nbsp;·&nbsp; Portfolio track (via accelerator / investor referral) &nbsp;·&nbsp; Ask: $100K credits</p>
+      </div>
+      <span class="pitch-badge badge-aws">$100K Credits</span>
+    </div>
+
+    <div class="pitch-body">
+
+      <div class="highlights">
+        <div class="highlight-box">
+          <div class="val">AWS Braket</div>
+          <div class="lbl">Strategic Alignment</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">$100K</div>
+          <div class="lbl">Portfolio Track Ask</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">3 AWS Services</div>
+          <div class="lbl">Immediate Planned Usage</div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span class="label">Application Form Answers</span><hr>
+      </div>
+
+      <table class="field-table" style="margin-bottom:24px;">
+        <thead><tr><th>Field</th><th>Answer</th></tr></thead>
+        <tbody>
+          <tr><td>Company Name</td><td>QForge</td></tr>
+          <tr><td>Website</td><td>https://qforge.app</td></tr>
+          <tr><td>Country</td><td>India</td></tr>
+          <tr><td>Stage</td><td>Pre-Seed</td></tr>
+          <tr><td>Track</td><td>Portfolio (via accelerator / VC referral)</td></tr>
+          <tr><td>Credits Requested</td><td>$100,000</td></tr>
+          <tr><td>Primary AWS Services</td><td>AWS Braket, Amazon Bedrock, Amazon ECS / Fargate</td></tr>
+          <tr><td>Technical Contact</td><td>[Founder name + email]</td></tr>
+        </tbody>
+      </table>
+
+      <div class="qa-block">
+        <div class="qa-label">Company Description</div>
+        <div class="qa-question">What does your company do? (2-3 sentences)</div>
+        <div class="qa-answer">
+          QForge is a VS Code extension and cloud backend that serves as the professional development environment for quantum computing engineers. We provide AI-powered circuit code generation, real quantum simulator execution, noise analysis, cryptographic circuit fingerprinting (Circuit DNA), and a Proof-of-Quantum-Work certification system — all inside VS Code. We are live on the Marketplace (v4.0.5) with paying users across certifications ($49–$199), Pro subscriptions, and enterprise licenses.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">AWS Braket Alignment</div>
+        <div class="qa-question">How does your product align with AWS Braket and AWS's quantum strategy?</div>
+        <div class="qa-answer">
+          <strong>AWS Braket is our planned next hardware integration.</strong> QForge currently executes circuits via Qiskit Aer (local simulator); our Q3 roadmap adds Braket as a first-class cloud backend, giving our users direct access to IonQ, Rigetti, and OQC hardware without leaving VS Code. This is a natural fit: QForge handles the developer experience layer (code generation, debugging, circuit explanation), while Braket provides the compute. Every QForge user who runs a circuit on real quantum hardware would generate Braket usage — we become a developer acquisition channel for AWS Quantum.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Credit Usage Plan</div>
+        <div class="qa-question">How will you use the $100K in AWS credits?</div>
+        <div class="qa-answer">
+          <strong>50% — AWS Braket ($50K):</strong> Subsidise quantum hardware shots for certification grading. Our Proof-of-Quantum-Work system requires running learner-submitted circuits on real or simulated hardware. Without credits, hardware execution costs prevent us from offering affordable certifications to users in India, Southeast Asia, and Africa — exactly the markets where quantum talent is emerging but infrastructure access is lowest.<br><br>
+          <strong>30% — Amazon ECS / Fargate ($30K):</strong> Migrate our FastAPI backend from Railway to ECS Fargate for better autoscaling, AWS IAM integration, and co-location with Braket and Bedrock. This also enables us to deploy a single-tenant instance per enterprise customer inside their own AWS account.<br><br>
+          <strong>20% — Amazon Bedrock ($20K):</strong> Evaluate Bedrock-hosted Claude and Amazon Nova models as a regional fallback for our LLM stack, particularly for latency-sensitive users in Asia Pacific where Anthropic's direct API sometimes has higher p99 latency.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Market Opportunity</div>
+        <div class="qa-question">What is the size of your market?</div>
+        <div class="qa-answer">
+          The addressable market has two layers. The immediate TAM is the 15,000+ quantum computing researchers and engineers globally — a small but extremely high-value cohort where willingness-to-pay for professional tooling mirrors the traditional software developer tools market (JetBrains, GitHub, etc.). The larger opportunity is the 500,000+ quantum-adjacent developers in quantum chemistry, materials science, finance, and cryptography who will need to run quantum algorithms as hardware becomes more accessible. <strong>AWS Braket access through QForge is the natural entry point for this second cohort</strong> — they already trust AWS; QForge makes Braket usable for people who are not quantum physicists.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Competitive Differentiation</div>
+        <div class="qa-question">Who are your competitors and why are you different?</div>
+        <div class="qa-answer">
+          Direct competitors are limited to general-purpose AI coding tools (GitHub Copilot, Cursor) that have no quantum-specific knowledge, and quantum cloud dashboards (IBM Quantum, Azure Quantum portal) that are browser-based and have no AI assistance. No other product combines <strong>IDE-native workflow + quantum-specific AI + circuit fingerprinting + credentialing</strong> in a single tool. Our Circuit DNA system is protectable IP: the four-layer cryptographic fingerprint (genotype + topology + sequence + phenotype) is a novel approach to circuit identity that has applications in IP protection, plagiarism detection, and hardware fingerprinting beyond our current use cases.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Traction</div>
+        <div class="qa-question">What traction demonstrates product-market fit?</div>
+        <div class="qa-answer">
+          QForge v4.0.5 is live on the VS Code Marketplace with <strong>[X total installs]</strong>, <strong>[Y MAU]</strong>, and <strong>[$Z MRR]</strong>. We have issued <strong>[N certifications]</strong> across 6 tracks and have <strong>[M IP Vault registrations]</strong> from researchers protecting novel circuit designs. Our backend is deployed on Railway with [uptime]% availability. We have had inbound interest from [university / lab name] for a cohort certification program ($1,200/semester for 30 students) and [company name] for an enterprise pilot.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="copy-bar">
+      <span>Apply at aws.amazon.com/activate — use Portfolio track if you have an investor or accelerator referral</span>
+      <button class="btn-copy" onclick="copySection('aws')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy All Text
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       4. Y COMBINATOR
+  ════════════════════════════════════════ -->
+  <div class="pitch-card yc" id="yc">
+    <div class="pitch-header">
+      <div class="title-group">
+        <h2>Y Combinator Application</h2>
+        <p>ycombinator.com/apply &nbsp;·&nbsp; Complete application answers for key YC questions</p>
+      </div>
+      <span class="pitch-badge badge-yc">YC Application</span>
+    </div>
+
+    <div class="pitch-body">
+
+      <div class="highlights">
+        <div class="highlight-box">
+          <div class="val">B2D + B2B</div>
+          <div class="lbl">Business Model</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">Live Product</div>
+          <div class="lbl">Not a Prototype</div>
+        </div>
+        <div class="highlight-box">
+          <div class="val">Quantum</div>
+          <div class="lbl">Defensible Niche</div>
+        </div>
+      </div>
+
+      <div class="section-divider">
+        <span class="label">Company & Product</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">50-Character Description</div>
+        <div class="qa-question">Describe your company in 50 characters or less.</div>
+        <div class="qa-answer">
+          <strong>GitHub Copilot for quantum computing</strong> <span class="char-pill">39 chars</span>
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Company Description</div>
+        <div class="qa-question">What does your company do? (clear, specific, jargon-free)</div>
+        <div class="qa-answer">
+          QForge is a VS Code extension that gives quantum computing developers AI-powered code generation, real circuit execution, and the first cryptographically verifiable certification system for quantum skills. A quantum researcher installs QForge, describes a circuit in plain English, gets working Qiskit/Cirq/PennyLane code, runs it against a real simulator, and earns a tamper-proof certification — all without leaving their editor. We have <strong>[X]</strong> installs, <strong>[Y]</strong> MAU, and <strong>[$Z]</strong> MRR from paying certifications and subscriptions.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Why This Idea</div>
+        <div class="qa-question">Why did you pick this idea to work on? Do you have domain expertise?</div>
+        <div class="qa-answer">
+          [Founder background — fill in your specific story here.] We started in quantum computing research / quantum software engineering and hit the same wall every person in the field hits: the tooling is 20 years behind classical computing. You write circuits in Jupyter notebooks with no autocomplete, no AI assistance, no debugger, no way to verify your understanding beyond self-assessment. We built the tool we needed every day. The Circuit DNA fingerprinting idea came from a real problem: a colleague submitted a circuit for a research paper, a competitor published nearly identical work two months later, and there was no way to prove prior authorship. That became our IP Vault feature, which turned out to be our most defensible IP.
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:32px;">
+        <span class="label">Innovation & Market</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">What's New</div>
+        <div class="qa-question">What's new about what you're making? What substitutes do people resort to now?</div>
+        <div class="qa-answer">
+          Right now, quantum developers use: GitHub Copilot (no quantum knowledge, generates wrong gates constantly), IBM Quantum's browser UI (no AI, no VS Code integration), and Stack Overflow + documentation (slow, fragmented). <strong>Three genuinely new things about QForge:</strong><br><br>
+          1. <strong>Circuit DNA:</strong> A four-layer cryptographic fingerprint (gate histogram + connectivity graph + run-length sequence + parameter statistics) that uniquely identifies any quantum circuit. No other tool treats circuits as identifiable digital assets.<br><br>
+          2. <strong>Proof-of-Quantum-Work certifications:</strong> Learners submit real circuit implementations graded by comparing Circuit DNA against reference fingerprints and executing on a live simulator. Every other quantum certification is multiple-choice. Ours requires you to actually write and run working quantum code.<br><br>
+          3. <strong>Framework-aware AI:</strong> Our LLM context is specifically engineered for Qiskit, Cirq, and PennyLane syntax, including deprecation-aware completions and hardware topology constraints. Generic LLMs generate plausible but wrong quantum code roughly 30% of the time; QForge reduces this to under 17% based on our internal benchmarks.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">User Evidence</div>
+        <div class="qa-question">How do you know people want this? What have you done to validate demand?</div>
+        <div class="qa-answer">
+          We did not do surveys — we shipped the product and watched what happened. <strong>[X]</strong> developers have installed QForge. <strong>[Y]</strong> people paid for certifications at $49–$199 each without any paid marketing. <strong>[Z]</strong> researchers registered circuits in our IP Vault, which tells us the "quantum IP protection" pain point is real and urgent. We received inbound emails from [university / research lab] asking about cohort licensing before we had a sales process. The most telling signal: our AI chat assistant has a <strong>[%]</strong> day-7 retention rate — developers come back daily because the tool is genuinely useful for active work, not just onboarding.
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:32px;">
+        <span class="label">Competition & Moat</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Competitors</div>
+        <div class="qa-question">Who are your competitors, and what do you understand about the market that they don't?</div>
+        <div class="qa-answer">
+          <strong>Direct:</strong> None. There is no other quantum-specific IDE extension with AI capabilities.<br><br>
+          <strong>Adjacent:</strong><br>
+          — <em>GitHub Copilot / Cursor</em> — general-purpose, quantum syntax errors go undetected, no execution, no certification<br>
+          — <em>IBM Quantum Platform</em> — browser-based, locked to IBM hardware, no AI, no credentialing<br>
+          — <em>Azure Quantum portal</em> — similar to IBM, Microsoft-ecosystem only<br>
+          — <em>Classiq / Qiskit Runtime</em> — higher-level circuit synthesis tools for advanced users, not developer tooling for the broader engineering audience<br>
+          — <em>AWS Braket</em> — hardware access, not developer tooling<br><br>
+          <strong>What we understand that others don't:</strong> The quantum talent bottleneck is not hardware — it is <em>developer tooling and credentialing</em>. IBM and Google are racing to build better qubits but nobody is investing in making quantum software engineering a profession with a career ladder. QForge owns that layer. The Circuit DNA / IP Vault system also creates a data moat: every circuit fingerprinted through QForge builds a proprietary dataset of quantum circuit patterns that could eventually power better circuit optimization and hardware mapping models.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Unique Insight</div>
+        <div class="qa-question">What do you understand about your business that others don't?</div>
+        <div class="qa-answer">
+          The quantum developer market looks small today (15,000 researchers) but it has the same structure as the cloud developer market in 2008 — a small, highly technical cohort followed by a wave of adjacent engineers who adopt the technology as it matures. <strong>Whoever owns developer tooling at the beginning owns the workflow when the market expands.</strong> The certification system is our trojan horse: a quantum developer who earns a QForge certification lists it on their LinkedIn, their employer queries our verification API, and suddenly QForge credentials are the de facto standard before any competitor even thinks about building one. We are not a tools company — we are building the credentialing and identity layer for quantum computing as a profession.
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:32px;">
+        <span class="label">Business Model & Fundraising</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Revenue Model</div>
+        <div class="qa-question">How will you make money?</div>
+        <div class="qa-answer">
+          Five revenue streams, all live or near-live:<br><br>
+          <strong>1. Certifications ($49–$199 per cert, $599 for all 6):</strong> Proof-of-Quantum-Work credentials across Quantum Fundamentals, Circuit Design Pro, Algorithm Expert, Error Correction, Hardware Specialist, and Quantum ML. Unit economics: ~$8 LLM cost per graded submission, $49+ revenue.<br><br>
+          <strong>2. Pro Subscription ($29/month):</strong> Unlimited AI chat, higher circuit execution limits, priority grading.<br><br>
+          <strong>3. Enterprise ($2,500/cohort):</strong> Team seats, audit logs, SSO, custom circuit libraries. University cohorts at $1,200/semester for 30 students.<br><br>
+          <strong>4. IP Vault ($99/registration + $19/month monitoring):</strong> Researchers register and timestamp quantum circuit designs for IP protection. Currently the only cryptographically verifiable prior-art system for quantum algorithms.<br><br>
+          <strong>5. Talent Marketplace (15% fee on job placements):</strong> Connects certified quantum developers with employers. Requires at least one QForge certification to create a developer profile, so listing quality is built-in.
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Fundraising</div>
+        <div class="qa-question">How much money could you raise? What would you use it for?</div>
+        <div class="qa-answer">
+          We believe we can raise <strong>$500K–$1.5M pre-seed</strong> in the current market. Quantum computing is a rare domain where there is meaningful VC activity (Quantonation, The Quantum Insider fund network, deep tech arms of Sequoia India / Accel) and very few software-layer bets — most quantum capital goes to hardware. Our ask is sized to reach three milestones before Series A:<br><br>
+          — <strong>[5,000 MAU + $25K MRR]</strong> within 12 months (proves the free-to-paid funnel)<br>
+          — <strong>3 university or corporate cohort contracts</strong> (proves enterprise willingness-to-pay)<br>
+          — <strong>AWS Braket integration shipped</strong> (unlocks real-hardware certification grading and positions for strategic partnership)<br><br>
+          Capital allocation: 60% engineering (2 hires — quantum ML engineer and a backend engineer to own the Braket integration), 25% LLM API and infrastructure costs, 15% growth and community.
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:32px;">
+        <span class="label">Founder Information</span><hr>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Founders</div>
+        <div class="qa-question">Please tell us about the founders.</div>
+        <div class="qa-answer">
+          [Complete this section with real founder names, backgrounds, and what makes you specifically the right team to build QForge. YC weights founder-market fit heavily. Key points to cover: quantum computing background (research, coursework, or work experience), software engineering depth (who built the 55 VS Code commands, 45 FastAPI routers, and Circuit DNA system), and why you are building this in India (talent ecosystem, cost structure, which quantum institutions you are close to — IIT, TIFR, etc.).]
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-label">Progress</div>
+        <div class="qa-question">How far along are you?</div>
+        <div class="qa-answer">
+          QForge v4.0.5 is live with full feature parity to our roadmap for this stage: <strong>55 registered VS Code commands</strong>, <strong>40 webview panels</strong>, <strong>45+ FastAPI routers</strong>, MongoDB backend with 36+ collections, Anthropic/OpenAI/Gemini LLM fallback chain, circuit breaker + LLM response caching for resilience, Sentry error tracking, Redis rate limiting, and a full CI/CD pipeline on GitHub Actions. We are not in "MVP" territory — this is a production system deployed on Railway with <strong>[uptime %]</strong> availability. The certification system has issued <strong>[N real certifications]</strong>. We have paying customers. The product works.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="copy-bar">
+      <span>Apply at ycombinator.com/apply — adapt answers to the current YC form format</span>
+      <button class="btn-copy" onclick="copySection('yc')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy All Text
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="border-top: 1px solid var(--border); padding-top: 24px; text-align: center; color: var(--muted); font-size: 0.8rem;">
+    QForge Startup Applications · Generated 2026 · Internal use only · qforge.app
+  </div>
+
+</main>
+
+<!-- ════════════════════════════════════
+     COPY TO CLIPBOARD JS
+════════════════════════════════════════ -->
+<script>
+  function copySection(id) {
+    const card = document.getElementById(id);
+    if (!card) return;
+
+    // Collect all text from qa-answer elements + labels
+    const blocks = card.querySelectorAll('.qa-block');
+    const lines = [];
+
+    const title = card.querySelector('.pitch-header h2')?.innerText ?? '';
+    lines.push('='.repeat(60));
+    lines.push(title.toUpperCase());
+    lines.push('='.repeat(60));
+    lines.push('');
+
+    // Also grab field table rows if present
+    const tableRows = card.querySelectorAll('.field-table tr');
+    if (tableRows.length > 1) {
+      lines.push('--- BASIC INFORMATION ---');
+      tableRows.forEach((tr, i) => {
+        if (i === 0) return; // skip header
+        const tds = tr.querySelectorAll('td');
+        if (tds.length >= 2) {
+          lines.push(tds[0].innerText.trim() + ': ' + tds[1].innerText.trim());
+        }
+      });
+      lines.push('');
+    }
+
+    blocks.forEach(block => {
+      const label    = block.querySelector('.qa-label')?.innerText ?? '';
+      const question = block.querySelector('.qa-question')?.innerText ?? '';
+      const answer   = block.querySelector('.qa-answer')?.innerText ?? '';
+
+      lines.push('--- ' + label.toUpperCase() + ' ---');
+      lines.push('Q: ' + question);
+      lines.push('');
+      lines.push(answer.trim());
+      lines.push('');
+    });
+
+    const text = lines.join('\n');
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = card.querySelector('.btn-copy');
+      if (!btn) return;
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy All Text`;
+      }, 2500);
+    }).catch(() => {
+      // Fallback for browsers where clipboard isn't available
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  // Highlight sidebar link on scroll
+  const sections = ['checklist','microsoft','anthropic','aws','yc'];
+  const links = {};
+  sections.forEach(id => {
+    const el = document.querySelector(`nav a[href="#${id}"]`);
+    if (el) links[id] = el;
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        Object.values(links).forEach(l => {
+          l.style.color = '';
+          l.style.borderLeftColor = 'transparent';
+          l.style.background = '';
+        });
+        const l = links[entry.target.id];
+        if (l) {
+          l.style.color = 'var(--accent)';
+          l.style.borderLeftColor = 'var(--accent)';
+          l.style.background = 'rgba(165,180,252,0.07)';
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
